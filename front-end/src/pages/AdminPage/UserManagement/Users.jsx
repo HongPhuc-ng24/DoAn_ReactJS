@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Users.module.scss";
 import * as userServices from "../../../services/userServices";
 
@@ -135,7 +135,7 @@ const AdminUserPage = () => {
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>STT</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>

@@ -1,55 +1,43 @@
-// services/productService.js
 import * as httpRequest from "../utils/httpRequest";
 
-const authHeader = () => ({
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-});
-
-export const getAllNews = async () => {
+export const getAllNews = async (page = 1, limit = 5) => {
   try {
-    const response = await httpRequest.get("api/news/all", authHeader());
-    console.log(response);
+    const response = await httpRequest.get(
+      `api/news?page=${page}&limit=${limit}`
+    );
     return response;
   } catch (error) {
-    console.error("Error getAllNew", error);
-    return [];
+    console.error("Error getAllNews", error);
+    return { news: [], totalPages: 1 };
   }
 };
 
 export const getNewById = async (id) => {
   try {
-    const response = await httpRequest.get(`api/news/${id}`, authHeader());
-    return response;
+    return await httpRequest.get(`api/news/${id}`);
   } catch (error) {
     console.error("Error getNewById", error);
     return null;
   }
 };
 
-export const createNew = async (newData) => {
+export const createNew = async (formData) => {
   try {
-    const formData = new FormData();
-    for (let key in newData) {
-      formData.append(key, newData[key]);
-    }
-    const response = await httpRequest.post("api/news", formData, authHeader());
-    return response;
+    const isFormData = formData instanceof FormData;
+    return await httpRequest.post("api/news", formData, {
+      headers: isFormData
+        ? { "Content-Type": "multipart/form-data" }
+        : { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("Error createNew", error);
     return null;
   }
 };
 
-export const updateNew = async (id, data) => {
+export const updateNew = async (id, formData) => {
   try {
-    const response = await httpRequest.put(
-      `api/news/${id}`,
-      data,
-      authHeader()
-    );
-    return response;
+    return await httpRequest.patch(`api/news/${id}`, formData);
   } catch (error) {
     console.error("Error updateNew", error);
     return null;
@@ -58,8 +46,7 @@ export const updateNew = async (id, data) => {
 
 export const deleteNew = async (id) => {
   try {
-    const response = await httpRequest.del(`api/news/${id}`, authHeader());
-    return response;
+    return await httpRequest.del(`api/news/${id}`);
   } catch (error) {
     console.error("Error deleteNew", error);
     return null;

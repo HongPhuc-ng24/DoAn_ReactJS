@@ -8,12 +8,14 @@ const {
 
 const router = express.Router();
 
-router.get("/all", ProductController.getAllProduct);
+router.get("/", ProductController.getAllProduct);
+router.get("/search", ProductController.searchProduct);
+
 router.get("/:id", ProductController.getProductById);
 router.post(
-  "/add",
-  // authenticate,
-  // authorizeAdmin,
+  "/",
+  authenticate,
+  authorizeAdmin,
   upload.single("Img"),
   ProductController.addProduct
 );
